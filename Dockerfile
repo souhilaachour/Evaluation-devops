@@ -7,6 +7,8 @@ FROM python:3.12.7-slim
 WORKDIR /app
 COPY --from=builder /install /usr/local
 COPY app ./app
+ARG GIT_SHA=local
+ENV GIT_SHA=$GIT_SHA
 
 RUN useradd --create-home appuser
 USER appuser

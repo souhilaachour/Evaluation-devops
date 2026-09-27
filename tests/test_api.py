@@ -17,3 +17,10 @@ def test_creer_puis_lister_un_item(client):
 def test_item_sans_nom_refuse(client):
     reponse = client.post("/items", json={})
     assert reponse.status_code == 422
+
+def test_metrics(client):
+    client.get("/health")
+    reponse = client.get("/metrics")
+    assert reponse.status_code == 200
+    assert "http_requests_total" in reponse.text
+    assert "app_version_info" in reponse.text
