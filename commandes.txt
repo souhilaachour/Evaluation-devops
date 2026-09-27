@@ -1,0 +1,36 @@
+1. Recuperer le projet 
+git clone https://github.com/souhilaachour/Evaluation-devops.git
+cd Evaluation-devops
+
+2. Lancer l'application (API + base de donnees) 
+docker compose up -d --build
+docker compose ps
+
+3. Tester l'application 
+curl.exe http://localhost:8000/health
+Invoke-RestMethod -Method Post -Uri http://localhost:8000/items -ContentType "application/json" -Body '{"name": "test"}'
+curl.exe http://localhost:8000/items
+curl.exe http://localhost:8000/metrics
+
+Documentation de l'API : http://localhost:8000/docs
+
+4. Arreter l'application 
+docker compose down
+
+ 5. Lancer les tests 
+python -m venv .venv
+.venv\Scripts\activate
+pip install -r requirements-dev.txt
+docker run -d --name pg-dev -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=app -p 5432:5432 postgres:16.4-alpine
+pytest -v
+
+Tests avec les rapports :
+pytest -v --cov=app --cov-report=xml --junitxml=rapport-tests.xml
+
+Supprimer la base de test :
+docker rm -f pg-dev
+
+6. Verifier le lint et les regles d'alerte
+ruff check .
+yamllint .
+docker run --rm -v ${PWD}/monitoring:/m --entrypoint promtool prom/prometheus:v2.54.1 check rules /m/alertes.yml
