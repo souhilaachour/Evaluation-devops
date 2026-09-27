@@ -1,0 +1,10 @@
+extends: default
+rules:
+  line-length: disable
+  document-start: disable
+  new-lines: disable
+  new-line-at-end-of-file: disable
+  truthy:
+    check-keys: false
+ignore: |
+  .venv/
